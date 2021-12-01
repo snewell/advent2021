@@ -1,11 +1,12 @@
 package aoc
 
 import (
+	"fmt"
 	"io"
 	"os"
 )
 
-func Run(prog func(io.Reader)) {
+func Run(prog func(io.Reader) interface{}) {
 	if len(os.Args) == 0 {
 		prog(os.Stdin)
 	} else {
@@ -14,6 +15,7 @@ func Run(prog func(io.Reader)) {
 			panic(err)
 		}
 		defer f.Close()
-		prog(f)
+		result := prog(f)
+		fmt.Printf("%v\n", result)
 	}
 }

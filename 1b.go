@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	aoc.Run(func(input io.Reader) {
+	aoc.Run(func(input io.Reader) interface{} {
 		count := 0
 
 		windows := []int{0, 0, 0}
@@ -31,7 +31,7 @@ func main() {
 			_, err := fmt.Fscan(input, &current)
 			if err != nil {
 				if err == io.EOF {
-					break
+					return count
 				}
 				panic(err)
 			}
@@ -43,7 +43,5 @@ func main() {
 			}
 			previous = windows[0]
 		}
-
-		fmt.Printf("%v\n", count)
 	})
 }
