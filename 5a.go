@@ -7,7 +7,7 @@ import (
 )
 
 func isHorizontal(line aoc.Line) bool {
-	return line.First.X == line.Second.X
+	return line.First.Y == line.Second.Y
 }
 
 func filter(lines []aoc.Line) ([]aoc.Line, []aoc.Line) {
@@ -16,10 +16,20 @@ func filter(lines []aoc.Line) ([]aoc.Line, []aoc.Line) {
 
 	for _, line := range lines {
 		if isHorizontal(line) {
-			// TODO: order points in line
+			if line.First.X > line.Second.X {
+				line = aoc.Line{
+					First:  line.Second,
+					Second: line.First,
+				}
+			}
 			hor = append(hor, line)
 		} else {
-			// TODO: order points in line
+			if line.First.Y > line.Second.Y {
+				line = aoc.Line{
+					First:  line.Second,
+					Second: line.First,
+				}
+			}
 			vert = append(vert, line)
 		}
 	}
@@ -28,7 +38,16 @@ func filter(lines []aoc.Line) ([]aoc.Line, []aoc.Line) {
 }
 
 func findIntersection(hor aoc.Line, vert aoc.Line) (aoc.Point, bool) {
-	// TODO: implement
+	if (hor.First.X <= vert.First.X) && (vert.First.X <= hor.Second.X) {
+		// X overlap
+		if (vert.First.Y <= hor.First.Y) && (hor.First.Y <= vert.Second.Y) {
+			// Y overlap
+			return aoc.Point{
+				X: vert.First.X,
+				Y: hor.First.Y,
+			}, true
+		}
+	}
 	return aoc.Point{}, false
 }
 
@@ -47,13 +66,34 @@ func main() {
 			panic(err)
 		}
 
+		// look for intersections
 		hor, vert := filter(lines)
 		counts := map[aoc.Point]int{}
 		for _, horLine := range hor {
 			for _, vertLine := range vert {
 				point, intersects := findIntersection(horLine, vertLine)
 				if intersects {
-					counts[point]++
+					counts[point] += 2
+				}
+			}
+		}
+
+		// check for overlapping horizontal lines
+		for index, first := range hor[:len(hor)-1] {
+			for _, second := range hor[index+1:] {
+				overlapping := aoc.FindHorizontalOverlap(first, second)
+				for _, point := range overlapping {
+					counts[point] += 2
+				}
+			}
+		}
+
+		// check for overlapping vertical lines
+		for index, first := range vert[:len(vert)-1] {
+			for _, second := range vert[index+1:] {
+				overlapping := aoc.FindVerticalOverlap(first, second)
+				for _, point := range overlapping {
+					counts[point] += 2
 				}
 			}
 		}

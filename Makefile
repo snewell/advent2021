@@ -1,4 +1,4 @@
-.PHONY := help format
+.PHONY := format help test
 
 help:
 	@echo "Usage: make <day>[a|b]"
@@ -9,3 +9,6 @@ help:
 
 format:
 	find -name '*.go' | xargs gofmt -w
+
+test:
+	go test ./internal/aoc
