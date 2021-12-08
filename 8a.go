@@ -13,10 +13,9 @@ type sevenPanelInfo struct {
 	outputs []string
 }
 
-func readInput(input io.Reader) []sevenPanelInfo {
+func processInput(input io.Reader, processFunc func(sevenPanelInfo)) {
 	scanner := bufio.NewScanner(input)
 
-	ret := []sevenPanelInfo{}
 	for scanner.Scan() {
 		sides := strings.Split(scanner.Text(), "|")
 		data := sevenPanelInfo{
@@ -25,16 +24,14 @@ func readInput(input io.Reader) []sevenPanelInfo {
 		}
 		data.inputs = data.inputs[:len(data.inputs)-1]
 		data.outputs = data.outputs[1:]
-		ret = append(ret, data)
+		processFunc(data)
 	}
-	return ret
 }
 
 func main() {
 	aoc.Run(func(input io.Reader) interface{} {
-		notes := readInput(input)
 		count := 0
-		for _, data := range notes {
+		countFunc := func(data sevenPanelInfo) {
 			for _, inputData := range data.outputs {
 				switch len(inputData) {
 				case 2: // 1
@@ -51,6 +48,7 @@ func main() {
 				}
 			}
 		}
+		processInput(input, countFunc)
 		return count
 	})
 }
