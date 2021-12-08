@@ -10,16 +10,8 @@ func main() {
 	aoc.Run(func(input io.Reader) interface{} {
 		positions := aoc.ReadCrabPositions(input)
 
-		distanceCosts := map[int]int{}
-		maxDistance := positions.MaxPosition - positions.MinPosition
-		currentCost := 0
-		for i := 0; i < maxDistance; i++ {
-			currentCost += i
-			distanceCosts[i] = currentCost
-		}
-
 		costFunction := func(distance int) int {
-			return distanceCosts[distance]
+			return (distance*distance + distance) / 2
 		}
 		return aoc.CalculateMinFuel(positions, costFunction)
 	})
