@@ -7,8 +7,9 @@ import (
 )
 
 func Run(prog func(io.Reader) interface{}) {
-	if len(os.Args) == 0 {
-		prog(os.Stdin)
+	if len(os.Args) == 1 {
+		result := prog(os.Stdin)
+		fmt.Printf("%v\n", result)
 	} else {
 		f, err := os.Open(os.Args[1])
 		if err != nil {
