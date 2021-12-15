@@ -70,7 +70,7 @@ func main() {
 		counts := [26]uint64{}
 		for i := 0; i < (len(first) - 1); i++ {
 			current := first[i : i+2]
-			pairCount := apply(rune(current[0]), rune(current[1]), 10, &rules, &cache)
+			pairCount := apply(rune(current[0]), rune(current[1]), 40, &rules, &cache)
 			for index := range pairCount {
 				counts[index] += pairCount[index]
 			}
